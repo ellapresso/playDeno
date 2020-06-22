@@ -1,3 +1,4 @@
+//tsconfig 지정해서 실행하기 : deno run -c tsconfig.json  decorator.ts
 //params 는 타입스크립트의 기본 lib에 내장되어 있는 아이들
 function decorator(
   target: Object,
