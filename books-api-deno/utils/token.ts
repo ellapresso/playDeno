@@ -3,6 +3,10 @@ import {
   setExpiration,
   Jose,
 } from "https://deno.land/x/djwt/create.ts";
+import {
+  validateJwt,
+  JwtValidation,
+} from "https://deno.land/x/djwt/validate.ts";
 import { User } from "../models/Users.ts";
 
 const key = "markzzang";
@@ -23,4 +27,8 @@ export function generate(user: User): string {
     },
     key,
   });
+}
+
+export async function validate(token: string): Promise<JwtValidation> {
+  return await validateJwt(token, key);
 }
