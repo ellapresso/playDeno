@@ -3,8 +3,9 @@ import client from "./config.ts";
 
 const dex = Dex({ client: "mysql" });
 
-interface Book {
+export interface Book {
   id: number;
+  ownerId: string;
   title: string;
   message: string;
   author: string;
@@ -25,12 +26,10 @@ export async function getBooksByOwnerId(ownerId: string): Promise<Book[]> {
     .queryBuilder()
     .select()
     .from("Books")
-    .where(
-      { ownerId },
-    )
+    .where({ ownerId })
     .toString();
   const { rows } = await client.execute(selectQuery);
-  if (rows === undefined) throw new Error("query error");
+  if (rows === undefined) throw new Error();
   return rows;
 }
 
@@ -45,4 +44,17 @@ export async function createBook(
     .toString();
   console.log(insertQuery);
   await client.execute(insertQuery);
+}
+
+export async function getBookById(id: number, ownerId: string): Promise<Book> {
+  const selectQuery = dex
+    .queryBuilder()
+    .select()
+    .from("Books")
+    .where({ id, ownerId })
+    .toString();
+  const { rows } = await client.execute(selectQuery);
+  if (rows === undefined) throw new Error();
+  if (rows.length !== 1) throw new Error("result not exist");
+  return rows[0];
 }
